@@ -1,2 +1,4 @@
 # SADES
-Sayembara Desain built by Laravel
+Sayembara Desain built with Laravel
+
+
