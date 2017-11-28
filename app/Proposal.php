@@ -40,4 +40,11 @@ class Proposal extends Model
             ->select('proposals.*', 'users.name', 'jobs.price')
             ->where('proposals.id', $proposal_id);
     }
+
+    public static function count($job_id)
+    {
+        return DB::table('proposals')
+            ->where('job_id', $job_id)
+            ->count();
+    }
 }

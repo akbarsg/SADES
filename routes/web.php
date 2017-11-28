@@ -55,3 +55,7 @@ Route::get('/prototype/{job_id}', 'JobController@checkProposal');
 Route::get('/prototype/acc/{proposal_id}', 'JobController@acceptProposal');
 Route::post('image-upload',['as'=>'image.upload.post','uses'=>'JobController@imageUploadPost']);
 Route::post('image-upload-final',['as'=>'image.upload.post.final','uses'=>'JobController@imageUploadPostFinal']);
+Route::get('/profil/edit', 'UserController@edit');
+Route::get('/profil/{id}', 'UserController@show');
+Route::get('/profil/rate/{id}', 'UserController@rate');
+Route::get('/hapusAkun', 'UserController@deleteAccount');

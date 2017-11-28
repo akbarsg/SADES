@@ -48,8 +48,12 @@
 							<b><a href="/images/{{ $proposed[0]->link }}">Download prototype Anda</a></b>
 						@else
 							@if($proposed[0]->final == 0)
-								<p>Prototype Anda telah diterima oleh konsumen!</p>
-								<button type="button" class="button" onclick="document.getElementById('unggahAkhir').style.display='block'">Unggah Hasil Desain Akhir</button>
+								@if($isPaid == 0)
+									<p>Prototype Anda telah diterima oleh konsumen!</p>
+									<button type="button" class="button" onclick="document.getElementById('unggahAkhir').style.display='block'">Unggah Hasil Desain Akhir</button>
+								@else
+									<p>Job telah berakhir!</p>
+								@endif
 							@else
 								<b><p>Anda telah mengunggah hasil desain akhir. Tunggu pembayaran oleh konsumen.</p></b>
 							@endif
@@ -68,8 +72,12 @@
 						@if($proposed[0]->final == 1)
 							<h3>Desain Akhir yang Anda Terima:</h3>
 							<p>{{ $proposed[0]->name }} telah mengunggah hasil desain akhir. <b><a href="/images/{{ $proposed[0]->link_final }}">Download Desain Akhir</a></b></p>
-							<br>
-							<button type="button" class="button" onclick="document.getElementById('bayar').style.display='block'">Terima dan Bayar</button>
+							@if($isPaid == 0)
+								<br>
+								<button type="button" class="button" onclick="document.getElementById('bayar').style.display='block'">Terima dan Bayar</button>
+							@else
+								<p>Job telah berakhir!</p>
+							@endif
 						@else
 							<p>Freelancer ini belum mengunggah hasil desain akhir.</p>
 						@endif

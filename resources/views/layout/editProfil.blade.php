@@ -9,8 +9,8 @@
 				<h2 class="judul">Edit Profil</h2>
 				
 				<form action="">
-		  			<input class="w3-input w3-border" name="username" type="text">
-		  			<input class="w3-input w3-border" name="email" type="text">
+		  			<input class="w3-input w3-border" name="name" type="text" placeholder="Nama">
+		  			<input class="w3-input w3-border" name="email" type="text" placeholder="Email">
 		  			<input class="w3-input w3-border" name="password" type="password">
 		  			<input class="w3-input w3-border" name="re-password" type="password">
 		  			

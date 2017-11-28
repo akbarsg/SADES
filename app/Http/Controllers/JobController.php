@@ -10,6 +10,7 @@ use App\User;
 use App\Job;
 use App\Notification;
 use App\Proposal;
+use App\Payment;
 
 class JobController extends Controller
 {
@@ -46,8 +47,11 @@ class JobController extends Controller
 			$proposed = Proposal::getByJob($job_id)->get();
 			
 		}
-		
 
+        $countProposal = Proposal::count($job_id);
+		
+        $isPaid = Payment::isPaid($job_id);
+        // dd($isPaid);
 		$balance = DB::table('users')->where('id', Auth::user()->id)->value('balance');
 
 		
@@ -59,7 +63,7 @@ class JobController extends Controller
 		// 	->get();
     	// dd($proposed);
 		// return view('job/single', ['job' => $job]);
-		return view('layout.detail', ['job' => $job, 'proposed' => $proposed, 'balance' => $balance]);
+		return view('layout.detail', ['countProposal' => $countProposal, 'job' => $job, 'proposed' => $proposed, 'balance' => $balance, 'isPaid' => $isPaid]);
 	}
 
 	public function create()
@@ -196,11 +200,19 @@ class JobController extends Controller
             ->get();
     	$sisa = ((int)$saldo[0]->balance - (int) $proposal[0]->price);
     	// dd($sisa);
+
+        $payment = new Payment;
+        $payment->job_id = $proposal[0]->job_id;
+        $payment->proposal_id = $proposal[0]->id;
+        $payment->user_id = $proposal[0]->user_id;
+        $payment->price = $proposal[0]->price;
+        $payment->save();
+
     	$kurangi = DB::table('users')
         	->where('id', Auth::user()->id)
             ->update(['balance' => $sisa]);
 
         return back()
-        ->with('success','Anda telah menerima dan membayar hasil desain akhir dari ' . $proposal[0]->name . '. Saldo Anda menjadi ' . $saldo[0]->balance);
+        ->with('success','Anda telah menerima dan membayar hasil desain akhir dari ' . $proposal[0]->name . '. Saldo Anda menjadi ' . $sisa);
     }
 }
