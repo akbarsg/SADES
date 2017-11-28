@@ -12,13 +12,7 @@ class NotificationController extends Controller
 {
     public function takeJob(Request $request)
     {
-    	$notification = new Notification;
-    	$notification->title = 'Anda telah mengambil Job!';
-    	$notification->description = 'Job yang diambil adalah job dengan ID '.$request->job_id;
-    	$notification->user_id = $request->user_id;
-    	$notification->job_id = $request->job_id;
-    	
-    	$notification->save();
+    	Notification::takeJob($request);
 
     	return redirect('job/'.$request->user_id.'/'.$request->job_id);
     }

@@ -80,10 +80,11 @@
 
 					@else
 
-					<a href="/home" class="w3-bar-item w3-button"><i class="fa fa-user-circle-o" aria-hidden="true"></i> {{ Auth::user()->name }}</span>
+					<a href="/home" class="w3-bar-item w3-button"><i class="fa fa-home" aria-hidden="true"></i> Beranda</span>
 					</a>
 
-
+					<a href="/profil/{{ Auth::user()->id }}" class="w3-bar-item w3-button"><i class="fa fa-user-circle-o" aria-hidden="true"></i> {{ Auth::user()->name }}</span>
+					</a>
 					<a href="{{ route('logout') }}" class="w3-bar-item w3-button" onclick="event.preventDefault();document.getElementById('logout-form').submit();"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
 
 					<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

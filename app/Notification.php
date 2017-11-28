@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Illuminate\Http\Request;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -13,6 +15,17 @@ class Notification extends Model
     protected $fillable = [
         'title', 'description', 'job_id', 'user_id', 'to_user_id', 'type',
     ];
+
+    public static function takeJob(Request $request)
+    {
+        $notification = new Notification;
+        $notification->title = 'Anda telah mengambil Job!';
+        $notification->description = 'Job yang diambil adalah job dengan ID '.$request->job_id;
+        $notification->user_id = $request->user_id;
+        $notification->job_id = $request->job_id;
+        
+        $notification->save();
+    }
 
     public static function rated($from_id, $to_id)
     {

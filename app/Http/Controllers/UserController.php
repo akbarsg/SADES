@@ -11,6 +11,13 @@ use App\Notification;
 
 class UserController extends Controller
 {
+	public function register(Request $request)
+	{
+		User::register($request);
+
+		return redirect('home');
+	}
+
     public function deleteAccount()
     {
     	route('logout');

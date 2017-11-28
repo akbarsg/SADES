@@ -47,4 +47,29 @@ class Proposal extends Model
             ->where('job_id', $job_id)
             ->count();
     }
+
+    public static function prototypeUpload(Request $request, $imageName)
+    {
+        $proposal = new Proposal;
+        $proposal->job_id = $request->get('job_id');
+        $proposal->user_id = $request->get('user_id');
+        $proposal->link = $imageName;
+        $proposal->save();
+    }
+
+    public static function updateFinalDesign(Request $request, $imageName)
+    {
+        return DB::table('proposals')
+            ->where('id', $request->get('proposal_id'))
+            ->update(['final' => 1, 'link_final' => $imageName]);
+    }
+
+    public static function getForPrototype($job_id)
+    {
+        return DB::table('proposals')
+            ->join('users', 'proposals.user_id', '=', 'users.id')
+            ->join('jobs', 'proposals.job_id', '=', 'jobs.id')
+            ->select('proposals.*', 'users.name', 'jobs.title')
+            ->where('proposals.job_id', $job_id);
+    }
 }

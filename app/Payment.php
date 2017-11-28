@@ -23,4 +23,14 @@ class Payment extends Model
     	// return Payment::where('job_id', '=', $job_id);
     	//output null klo ga ada
     }
+
+    public static function pay($proposal)
+    {
+        $payment = new Payment;
+        $payment->job_id = $proposal[0]->job_id;
+        $payment->proposal_id = $proposal[0]->id;
+        $payment->user_id = $proposal[0]->user_id;
+        $payment->price = $proposal[0]->price;
+        $payment->save();
+    }
 }

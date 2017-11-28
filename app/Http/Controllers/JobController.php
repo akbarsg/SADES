@@ -17,11 +17,13 @@ class JobController extends Controller
 	public function index()
 	{
 		// $jobs = Job::all();
-		$jobs = DB::table('jobs')
-			->join('proposals', 'proposals.job_id', '=', 'jobs.id')
-			->select('jobs.*', 'proposals.final')
-			->where('proposals.final', 0)
-            ->get();
+
+        $jobs = Job::allNotFinal();
+		// $jobs = DB::table('jobs')
+		// 	->join('proposals', 'proposals.job_id', '=', 'jobs.id')
+		// 	->select('jobs.*', 'proposals.final')
+		// 	->where('proposals.final', 0)
+  //           ->get();
 
 		// return view('job/job', ['jobs' => $jobs]);
 		return view('layout.lihatJob', ['jobs' => $jobs]);
@@ -74,12 +76,7 @@ class JobController extends Controller
 
 	public function store(Request $request)
 	{
-		$job = new Job;
-		$job->title = $request->title;
-		$job->description = $request->description;
-		$job->price = $request->price;
-		$job->user_id = $request->user_id;
-		$job->save();
+		Job::store($request);
 
 		return redirect('home');
 	}
@@ -110,11 +107,7 @@ class JobController extends Controller
     	$imageName = time().'.'.request()->image->getClientOriginalExtension();
     	request()->image->move(public_path('images'), $imageName);
 
-    	$proposal = new Proposal;
-		$proposal->job_id = $request->get('job_id');
-		$proposal->user_id = $request->get('user_id');
-		$proposal->link = $imageName;
-		$proposal->save();
+    	Proposal::prototypeUpload($request, $imageName);
 
     	return back()
     	->with('success','You have successfully upload image.')
@@ -133,9 +126,7 @@ class JobController extends Controller
     	$imageName = time().'.'.request()->image->getClientOriginalExtension();
     	request()->image->move(public_path('images'), $imageName);
 
-		$acc = DB::table('proposals')
-        	->where('id', $request->get('proposal_id'))
-            ->update(['final' => 1, 'link_final' => $imageName]);
+		$acc = Proposal::updateFinalDesign($request, $imageName);
 
     	return back()
     	->with('success','You have successfully upload image.')
@@ -146,12 +137,7 @@ class JobController extends Controller
     {
     	// $proposals = DB::table('proposals')->where('job_id', $job_id)->get();
 
-    	$proposals = DB::table('proposals')
-            ->join('users', 'proposals.user_id', '=', 'users.id')
-            ->join('jobs', 'proposals.job_id', '=', 'jobs.id')
-            ->select('proposals.*', 'users.name', 'jobs.title')
-            ->where('proposals.job_id', $job_id)
-            ->get();
+    	$proposals = Proposal::getForPrototype($job_id)->get();
 
     	return view('layout.lihatPrototype', ['proposals' => $proposals]);
     }
@@ -187,26 +173,22 @@ class JobController extends Controller
     public function bayar($proposal_id)
     {
     	// $proposal = Proposal::get($proposal_id)->get();
-    	$proposal = DB::table('proposals')
-        	->join('users', 'proposals.user_id', '=', 'users.id')
-            ->join('jobs', 'proposals.job_id', '=', 'jobs.id')
-            ->select('proposals.*', 'users.name', 'jobs.price')
-            ->where('proposals.id', $proposal_id)
+    	$proposal = Proposal::get($proposal_id)
             ->get();
     	 // dd($proposal);
-    	$saldo = DB::table('users')
-        	->where('id', Auth::user()->id)
-            ->select('balance')
+    	$saldo = User::getBalance()
             ->get();
     	$sisa = ((int)$saldo[0]->balance - (int) $proposal[0]->price);
     	// dd($sisa);
 
-        $payment = new Payment;
-        $payment->job_id = $proposal[0]->job_id;
-        $payment->proposal_id = $proposal[0]->id;
-        $payment->user_id = $proposal[0]->user_id;
-        $payment->price = $proposal[0]->price;
-        $payment->save();
+        // $payment = new Payment;
+        // $payment->job_id = $proposal[0]->job_id;
+        // $payment->proposal_id = $proposal[0]->id;
+        // $payment->user_id = $proposal[0]->user_id;
+        // $payment->price = $proposal[0]->price;
+        // $payment->save();
+
+        Payment::pay($proposal);
 
     	$kurangi = DB::table('users')
         	->where('id', Auth::user()->id)
