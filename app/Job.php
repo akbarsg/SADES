@@ -22,12 +22,24 @@ class Job extends Model
 		$job->save();
     }
 
-    public static function allNotFinal()
+    public static function allNotAccepted()
     {
-    	return DB::table('jobs')
-			->join('proposals', 'proposals.job_id', '=', 'jobs.id')
-			->select('jobs.*', 'proposals.final')
-			->where('proposals.final', 0)
-            ->get();
+   //  	return DB::table('jobs')
+			// ->rightJoin('proposals', 'proposals.job_id', '=', 'jobs.id')
+			// ->where('proposals.accepted', '=', 1)
+   //          ->orWhere('proposals.accepted', '=', null)
+   //          ->get();
+
+        return DB::table('jobs')
+             ->where('accepted', '=', 0)
+             ->get();
+
+        // return DB::table('jobs')
+        //     ->leftJoin('proposals', 'proposals.id', '=', 'jobs.id')
+        //     ->unionAll($second)
+        //     ->where('proposals.accepted', '<>', 1)
+        //     ->where('jobs.title', '<>', NULL)
+        //     ->get();
+
     }
 }

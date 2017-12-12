@@ -43,7 +43,7 @@
          @endif
 
          @if (Auth::user()->role != 0)
-         <li><a href="/profil">Lihat Profil</a></li>
+         <li><a href="/profil/{{ Auth::user()->id }}">Lihat Profil</a></li>
          <li><a href="/profil/edit">Edit Profil</a></li>
          <li><a href="#" data-toggle="modal" data-target="#hapusAkun">Hapus Akun Anda</a></li>
          @endif

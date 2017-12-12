@@ -60,7 +60,7 @@
 				<img src="/img/Agung.png" style="width:100%">
 				<div class="w3-container">
 					<h3>Agung Wahyu Setio Budi</h3>
-					<p class="w3-opacity">System Analist</p>
+					<p class="w3-opacity">System Analyst</p>
 				</div>
 			</div>
 		</div>

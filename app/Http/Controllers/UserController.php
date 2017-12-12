@@ -43,4 +43,8 @@ class UserController extends Controller
     	$user = User::find(Auth::user()->id);
     	return view('layout.editProfil', ['user' => $user]);
     }
+
+    public function logout(){
+        return redirect();
+    }
 }

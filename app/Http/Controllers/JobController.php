@@ -18,7 +18,8 @@ class JobController extends Controller
 	{
 		// $jobs = Job::all();
 
-        $jobs = Job::allNotFinal();
+        $jobs = Job::allNotAccepted();
+        
 		// $jobs = DB::table('jobs')
 		// 	->join('proposals', 'proposals.job_id', '=', 'jobs.id')
 		// 	->select('jobs.*', 'proposals.final')
@@ -43,16 +44,24 @@ class JobController extends Controller
 		$job = Job::find($job_id);
 		$job->taken = DB::table('notifications')->where('user_id', $user_id)->where('job_id', $job_id)->value('id');
 // dd(Auth::user()->id);
-		if (Auth::user()->role == 1) {
-			$proposed = Proposal::getByJobAndID(Auth::user()->id, $job_id)->get();
-		} else {
+		// if (Auth::user()->role == 1) {
+		// 	$proposed = Proposal::getByJobAndID(Auth::user()->id, $job_id)->get();
+		// } else {
 			$proposed = Proposal::getByJob($job_id)->get();
 			
-		}
+		// }
 
         $countProposal = Proposal::count($job_id);
 		
         $isPaid = Payment::isPaid($job_id);
+        $isValidated = 0;
+        $payment = 0;
+        if ($isPaid != 0) {
+            $isValidated = Payment::isValidated($job_id);
+            $payment = Payment::getByJob($job_id)->first();
+        }
+        
+        
         // dd($isPaid);
 		$balance = DB::table('users')->where('id', Auth::user()->id)->value('balance');
 
@@ -65,7 +74,7 @@ class JobController extends Controller
 		// 	->get();
     	// dd($proposed);
 		// return view('job/single', ['job' => $job]);
-		return view('layout.detail', ['countProposal' => $countProposal, 'job' => $job, 'proposed' => $proposed, 'balance' => $balance, 'isPaid' => $isPaid]);
+		return view('layout.detail', ['countProposal' => $countProposal, 'job' => $job, 'proposed' => $proposed, 'balance' => $balance, 'isPaid' => $isPaid, 'isValidated' => $isValidated, 'payment' => $payment]);
 	}
 
 	public function create()
@@ -148,7 +157,13 @@ class JobController extends Controller
         	->where('id', $proposal_id)
             ->update(['accepted' => 1]);
 
+
+
         $proposal = Proposal::find($proposal_id);
+
+        $acc = DB::table('jobs')
+            ->where('id', $proposal->job_id)
+            ->update(['accepted' => 1]);
 
         NotificationController::acceptProposal($proposal_id);
 

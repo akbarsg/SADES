@@ -19,16 +19,8 @@ class NotificationController extends Controller
 
     public static function acceptProposal($proposal_id)
     {   
-
         $proposal = Proposal::find($proposal_id);
-
-        $notification = new Notification;
-        $notification->title = 'Ajuan prototype Anda telah diterima!';
-        $notification->description = 'Ajuan prototype Anda pada job dengan ID '. $proposal->id . ' telah diterima!';
-        $notification->user_id = $proposal->user_id;
-        $notification->job_id = $proposal->job_id;
-        
-        $notification->save();
+        Notification::acceptProposal($proposal);
     }
 
     

@@ -23,6 +23,20 @@ class Notification extends Model
         $notification->description = 'Job yang diambil adalah job dengan ID '.$request->job_id;
         $notification->user_id = $request->user_id;
         $notification->job_id = $request->job_id;
+        $notification->type = 0;
+        
+        $notification->save();
+    }
+
+    public static function acceptProposal($proposal)
+    {
+        
+        $notification = new Notification;
+        $notification->title = 'Ajuan prototype Anda telah diterima!';
+        $notification->description = 'Ajuan prototype Anda pada job dengan ID '. $proposal->id . ' telah diterima!';
+        $notification->user_id = $proposal->user_id;
+        $notification->job_id = $proposal->job_id;
+        $notification->type = 2;
         
         $notification->save();
     }

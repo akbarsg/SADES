@@ -55,13 +55,23 @@
 									<p>Job telah berakhir!</p>
 								@endif
 							@else
-								<b><p>Anda telah mengunggah hasil desain akhir. Tunggu pembayaran oleh konsumen.</p></b>
+								@if($isPaid == 0)
+									<b><p>Anda telah mengunggah hasil desain akhir. Tunggu pembayaran oleh konsumen.</p></b>
+								@else
+									@if($isValidated == 0)
+										<p>Konsumen telah melakukan pembayaran. Validasi pembayaran agar konsumen dapat mengunduh desain akhir Anda.</p>
+										<a href="/payments/{{ $payment->link_proof }}">Download bukti pembayaran</a> 
+										<b><a href="/payment/validate/{{ $payment->id }}" class=""><button>Validasi</button></a></b>
+									@else
+										<b><p>Pembayaran telah divalidasi. Job berakhir.</p></b>
+									@endif
+								@endif
 							@endif
 						@endif
 					@endif
 				@endif
 
-			@else 
+			@elseif(Auth::user()->role == 2)
 			<!-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#lihat">Lihat Prototype</button> -->
 				@if($proposed == '[]')
 					<p>Belum ada freelancer yang mengunggah prototype untuk job ini.</p>
@@ -71,12 +81,17 @@
 						<p>Oleh {{ $proposed[0]->name }} <b><a href="/images/{{ $proposed[0]->link }}">Download Prototype</a></b></p>
 						@if($proposed[0]->final == 1)
 							<h3>Desain Akhir yang Anda Terima:</h3>
-							<p>{{ $proposed[0]->name }} telah mengunggah hasil desain akhir. <b><a href="/images/{{ $proposed[0]->link_final }}">Download Desain Akhir</a></b></p>
+							<p>{{ $proposed[0]->name }} telah mengunggah hasil desain akhir.
 							@if($isPaid == 0)
 								<br>
-								<button type="button" class="button" onclick="document.getElementById('bayar').style.display='block'">Terima dan Bayar</button>
+								<button type="button" class="button" onclick="document.getElementById('bukti').style.display='block'">Terima dan Bayar</button>
 							@else
-								<p>Job telah berakhir!</p>
+								@if($isValidated == 0)
+									<p>Bukti pembayaran telah diunggah. Mohon tunggu freelancer untuk memvalidasinya.</p>
+								@else
+									<b><p>Pembayaran telah divalidasi. Terima kasih telah menggunakan layanan SADES!</p></b>
+									<a href="/images/{{ $proposed[0]->link_final }}"><button>Download Desain Akhir</button></a>
+								@endif
 							@endif
 						@else
 							<p>Freelancer ini belum mengunggah hasil desain akhir.</p>
@@ -210,12 +225,44 @@
 			@php
 				
 			@endphp
-			<p>Saldo Anda: Rp{{ $balance }}</p>
+			<!-- <p>Saldo Anda: Rp{{ $balance }}</p>
 			<p>Harga desain: Rp{{ $job->price }}</p>
-			<p>Saldo setelah membayar: <b>Rp{{ $balance - $job->price }}</b></p>
+			<p>Saldo setelah membayar: <b>Rp{{ $balance - $job->price }}</b></p> -->
+			<p>Hubungi freelancer terkait untuk metode pembayaran lalu unggah bukti pembayaran Anda di sini.</p>
 			
 			<a href="/job/bayar/{{ $proposed[0]->id }}" class="w3-button w3-green">Bayar</a>
 			<br />
+			<br />
+		</div>
+	</div>
+</div>
+<div id="bukti" class="w3-modal w3-animate-opacity">
+
+
+	<!-- Modal content-->
+	<div class="w3-modal-content w3-card-4">
+		<header class="w3-container w3-teal"> 
+			<span onclick="document.getElementById('bukti').style.display='none'" 
+			class="w3-button w3-large w3-display-topright">&times;</span>
+			<h2>Unggah Bukti Pembayaran</h2>
+		</header>
+		<div class="w3-container">
+			<p>Hubungi freelancer terkait untuk metode pembayaran lalu unggah bukti pembayaran Anda di sini.</p>
+			{!! Form::open(array('route' => 'payment.upload.post','files'=>true)) !!}
+					
+					{!! Form::label('lbPrice', 'Nominal Pembayaran'); !!}
+					{!! Form::text('price', $job->price); !!}
+					{!! Form::file('image', array('class' => 'form-control')) !!}
+					{!! Form::hidden('job_id', $job->id) !!}
+					{!! Form::hidden('user_id', Auth::user()->id) !!}
+					
+					{!! Form::hidden('proposal_id', $proposed[0]->id) !!}
+
+				
+					<button type="submit" class="w3-button w3-green">Unggah</button>
+				
+			
+			{!! Form::close() !!}
 			<br />
 		</div>
 	</div>
