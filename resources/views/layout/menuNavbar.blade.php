@@ -7,7 +7,8 @@
 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+	<script src="/js/jquery.min.js"></script>
 	<!-- CSRF Token -->
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -58,12 +59,24 @@
 		text-decoration: none;
 	}
 </style>
+<script>
+
+	function append(){
+		var dir=$("#inputCari");  
+  		var query=dir.val();  
+		var link = $("#cari").attr("href", "/search/" + query);
+
+	}
+
+	
+</script>
 </head>
 <body>
 	<!-- Navbar (sit on top) -->
 	<div class="w3-top">
 		<div class="w3-bar w3-white w3-card-2" id="myNavbar">
 			<a href="/" class="w3-bar-item w3-button w3-wide">SADES.COM</a>
+
 			<!-- Right-sided navbar links -->
 			<!-- <div class="w3-right w3-hide-small">
 				<a href="pasangJob" class="w3-bar-item w3-button"><i class="fa fa-th"></i> PASANG JOB</a>
@@ -72,14 +85,34 @@
 			<div class="w3-right w3-hide-small">
 				<!-- <a href="#work" class="w3-bar-item w3-button"><i class="fa fa-th"></i> PASANG JOB</a>
 					<a href="login" class="w3-bar-item w3-button"><i class="fa fa-user"></i> LOGIN</a> -->
+					
+						
+  					
 
+  					
+					
+
+					
+					    <!-- <input type="text" class="w3-bar-item w3-input" name="search" placeholder="Search...">
+					    
+					        <button class="w3-bar-item w3-button w3-green" type="submit">Wew</button>
+					        </button> -->
+					{!! Form::open(['method'=>'GET','url'=>'offices','class'=>'','role'=>'search','style'=>'display: none;'])  !!}
+
+					{!! Form::close() !!}
 
 					@guest
 					<a href="{{ route('login') }}" class="w3-bar-item w3-button"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a>
 					<a href="{{ route('register') }}" class="w3-bar-item w3-button"><i class="fa fa-user" aria-hidden="true"></i> Register</a>
 
 					@else
-
+					<input type="text" id="inputCari" class="w3-bar-item w3-input" onkeyup="append()" style="
+						    margin-top: 0px;
+						    padding-top: 16px;
+						    padding-bottom: 16px;
+						" placeholder="Cari pengguna..">
+						
+	  					<a id="cari" href="" class="w3-bar-item w3-button w3-green">Cari</a>
 					<a href="/home" class="w3-bar-item w3-button"><i class="fa fa-home" aria-hidden="true"></i> Beranda</span>
 					</a>
 
@@ -101,8 +134,18 @@
 					<i class="fa fa-bars"></i>
 				</a>
 			</div>
+			@if ($results = Session::get('hasilCari'))
+						<ul class="w3-ul w3-hoverable" style="background-color: yellowgreen">
+							@foreach($results as $result)
+								
+								
+								  	<a href="/profil/{{ $result->id }}"><li class="w3-display-container">{{ $result->name }}</li></a>
+								
+							@endforeach
+							</ul>
+						@endif
 		</div>
-
+		
 		<!-- Sidebar on small screens when clicking the menu icon -->
 		<nav class="w3-sidebar w3-bar-block w3-black w3-card-2 w3-animate-left w3-hide-medium w3-hide-large" style="display:none" id="mySidebar">
 			<a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-large w3-padding-16">Close ×</a>

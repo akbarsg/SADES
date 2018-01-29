@@ -20,6 +20,7 @@ class Job extends Model
 		$job->price = $request->price;
 		$job->user_id = $request->user_id;
 		$job->save();
+        return 1;
     }
 
     public static function allNotAccepted()
@@ -31,8 +32,9 @@ class Job extends Model
    //          ->get();
 
         return DB::table('jobs')
-             ->where('accepted', '=', 0)
-             ->get();
+             // ->where('accepted', '=', 0)
+            ->orderBy('accepted', 'asc')
+            ->get();
 
         // return DB::table('jobs')
         //     ->leftJoin('proposals', 'proposals.id', '=', 'jobs.id')

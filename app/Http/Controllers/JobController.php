@@ -19,7 +19,13 @@ class JobController extends Controller
 		// $jobs = Job::all();
 
         $jobs = Job::allNotAccepted();
-        
+        $myJobs = DB::table('proposals')
+            ->join('jobs', 'jobs.id', '=', 'proposals.job_id')
+            ->select('jobs.id','jobs.title','jobs.description','jobs.user_id','jobs.price', 'proposals.accepted', 'proposals.final', 'proposals.user_id')
+            ->where('proposals.user_id', Auth::user()->id)
+            ->get();
+            // dd($myJobs);
+
 		// $jobs = DB::table('jobs')
 		// 	->join('proposals', 'proposals.job_id', '=', 'jobs.id')
 		// 	->select('jobs.*', 'proposals.final')
@@ -27,7 +33,7 @@ class JobController extends Controller
   //           ->get();
 
 		// return view('job/job', ['jobs' => $jobs]);
-		return view('layout.lihatJob', ['jobs' => $jobs]);
+		return view('layout.lihatJob', ['jobs' => $jobs, 'myJobs' => $myJobs]);
 	}
 
 	public function showMine($user_id)
@@ -43,6 +49,12 @@ class JobController extends Controller
 	{
 		$job = Job::find($job_id);
 		$job->taken = DB::table('notifications')->where('user_id', $user_id)->where('job_id', $job_id)->value('id');
+        $consumer = DB::table('jobs')
+            ->join('users', 'jobs.user_id', '=', 'users.id')
+            ->select('jobs.*', 'users.name')
+            ->where('jobs.id', $job_id)
+            ->first();
+        
 // dd(Auth::user()->id);
 		// if (Auth::user()->role == 1) {
 		// 	$proposed = Proposal::getByJobAndID(Auth::user()->id, $job_id)->get();
@@ -65,7 +77,6 @@ class JobController extends Controller
         // dd($isPaid);
 		$balance = DB::table('users')->where('id', Auth::user()->id)->value('balance');
 
-		
 		// $final = DB::table('proposals')
 		// 	->where('user_id', $user_id)
 		// 	->where('job_id', $job_id)
@@ -74,7 +85,7 @@ class JobController extends Controller
 		// 	->get();
     	// dd($proposed);
 		// return view('job/single', ['job' => $job]);
-		return view('layout.detail', ['countProposal' => $countProposal, 'job' => $job, 'proposed' => $proposed, 'balance' => $balance, 'isPaid' => $isPaid, 'isValidated' => $isValidated, 'payment' => $payment]);
+		return view('layout.detail', ['countProposal' => $countProposal, 'job' => $job, 'proposed' => $proposed, 'balance' => $balance, 'isPaid' => $isPaid, 'isValidated' => $isValidated, 'payment' => $payment, 'consumer' => $consumer]);
 	}
 
 	public function create()

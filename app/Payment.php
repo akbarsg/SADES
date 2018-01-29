@@ -57,6 +57,7 @@ class Payment extends Model
         $payment->user_id = $proposal[0]->user_id;
         $payment->price = $proposal[0]->price;
         $payment->save();
+        return 1;
     }
 
     public static function proofUpload(Request $request, $imageName)
@@ -69,5 +70,6 @@ class Payment extends Model
         $payment->link_proof = $imageName;
         $payment->validated = 0;
         $payment->save();
+        return 1;
     }
 }

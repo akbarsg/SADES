@@ -43,6 +43,7 @@ Route::get('/editProfil', function () {
 Route::get('/f/{id}', 'FreelancerController@beFreelancer');
 Route::get('/k/{id}', 'ConsumerController@beConsumer');
 
+Route::get('/search/{query}', 'UserController@findByKeyword');
 Route::get('/job/create', 'JobController@create');
 Route::post('/job/create', 'JobController@store');
 Route::get('/job', 'JobController@index');

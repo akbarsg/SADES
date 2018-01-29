@@ -26,6 +26,8 @@ class Notification extends Model
         $notification->type = 0;
         
         $notification->save();
+
+        return 1;
     }
 
     public static function acceptProposal($proposal)
@@ -39,6 +41,8 @@ class Notification extends Model
         $notification->type = 2;
         
         $notification->save();
+
+        return 1;
     }
 
     public static function rated($from_id, $to_id)
@@ -50,6 +54,8 @@ class Notification extends Model
         $notification->title = 'Anda telah memberi rating';
         $notification->description = 'Anda telah memberi peringkat pada pengguna dengan ID ' . $to_id;
         $notification->save();
+
+        return 1;
     }
 
     public static function isRated($from_id, $to_id)

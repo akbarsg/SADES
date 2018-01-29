@@ -57,6 +57,7 @@ class Proposal extends Model
         $proposal->user_id = $request->get('user_id');
         $proposal->link = $imageName;
         $proposal->save();
+        return 1;
     }
 
     public static function updateFinalDesign(Request $request, $imageName)

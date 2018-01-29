@@ -32,6 +32,13 @@ class UserController extends Controller
         return view('layout.profil', ['profil' => $profil, 'isRated' => $isRated]);
     }
 
+    public function findByKeyword($query)
+    {
+        $hasil = User::findByKeyword($query)->get();
+
+        return back()->with("hasilCari", $hasil);
+    }
+
     public function rate($id)
     {
     	User::rate($id);

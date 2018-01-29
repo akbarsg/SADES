@@ -29,7 +29,7 @@
 						@endif
 					@endif
 					@if(Auth::user()->id == $profil->id)
-						<button class="w3-btn w3-black">Edit Profil</button>
+						<!-- <button class="w3-btn w3-black">Edit Profil</button> -->
 					@endif
 					
 				</div>

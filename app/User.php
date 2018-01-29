@@ -40,6 +40,7 @@ class User extends Authenticatable
         $user->email = $request->email;
         $user->password = $request->password;
         $user->save();
+        return 1;
     }
 
     public static function login(Request $request)
@@ -51,6 +52,12 @@ class User extends Authenticatable
         } else {
             return 0;
         }
+    }
+
+    public static function findByKeyword($query)
+    {   
+        $query = '%' . $query . '%';
+        return DB::table('users')->where('name', 'like', $query);
     }
 
     public static function show($id)

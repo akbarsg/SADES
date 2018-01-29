@@ -25,7 +25,8 @@
 			</div>
 			@endif
 			<h2 class="judul">{{ $job->title }}</h2>
-			<a href=""><p class="w3-center w3-large">Rp{{ $job->price }}</p></a>
+			<p class="w3-center w3-large">Rp{{ $job->price }}</p>
+			<a href="/profil/{{ $consumer->user_id }}"><p class="w3-center w3-medium">Oleh {{ $consumer->name }}</p></a>
 			<h3>Deskripsi:</h3>
 			<p>{{ $job->description }}</p>
 			<hr>
